@@ -21,9 +21,21 @@
     stages {
          stage('checkout') {
                 steps {
+            catchError(message: 'Error to clone code occured') {
                 git branch: 'main',
-                credentialsId: githubCredential,
-                url: 'https://github.com/vladbronfman/panaya-assignment.git'
+                credentialsId: 'githubtoken',
+                url: 'https://github.com/vbronfman/panaya-assignment.git'
+              /*
+                checkout([$class: 'GitSCM',
+                    branches: [[name: "origin/${BRANCH_PATTERN}"]],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [[$class: 'LocalBranch']],
+                    submoduleCfg: [],
+                    userRemoteConfigs: [[
+                        credentialsId: '',
+                        url: 'https://github.com/bitwiseman/hermann']]])
+                        */
+                    }                
                 }
         }
         
@@ -75,7 +87,7 @@
     }
   post {
     always {
-      // sh 'docker compose down --remove-orphans -v'
+     // sh 'docker compose down --remove-orphans -v'
       sh 'docker compose down -v'
       sh 'docker compose ps'
     }
