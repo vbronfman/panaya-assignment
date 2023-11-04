@@ -1,4 +1,4 @@
-# Tanaya-assignment
+# Panaya-assignment
 Tech test for Panaya company
 
 ## The solution
