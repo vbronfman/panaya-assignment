@@ -12,13 +12,20 @@ Container of nginx exposes on localhost:9980
 
 ## Usage:
 git clone ...
+
 cd panaya_assignment
+
 ./env-manager.sh up
+
 
 ### Arguments:
 [up|UP] - start mysqldb and webserver stack;
+
 [ down|DOWN ] - stop and remove the stack 
-[ down|DOWN ] - deploy - rebuilds and restarts webserver  "
+
+[ down|DOWN ] - deploy - rebuilds and restarts webserver  
+
+
 
 __NOTE__
 _I've started with pure docker solution hence there is below script.
