@@ -17,17 +17,19 @@ services:
           MYSQL_ROOT_PASSWORD: password
           MYSQL_DATABASE: DB        
                 
-    # webserver:
-    #     build:
-    #         context: .
-    #         dockerfile: ./Dockerfile_NGINX
-    #         args:
-    #             DBNAME: 'DB'
-    #             NGINX_PORT: 9980
-    #             MYSQL_READ_ONLY_USER: "report"
-    #             DBHOST: '172.19.244.87'
-    #     ports:
-    #       - "9980:80"        
-    #     expose:
-    #       - '9980'
+    webserver:
+        build:
+            context: .
+            dockerfile: ./Dockerfile_NGINX
+            args:
+                DBNAME: 'DB'
+                NGINX_PORT: 9980
+                MYSQLUSER: "report"
+                DBHOST: '172.19.244.87'
+                OUTFILE: somefile.html             
+        ports:
+          - "9980:80"        
+        expose:
+          - '9980'
+          
 

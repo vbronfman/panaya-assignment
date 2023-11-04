@@ -1,0 +1,33 @@
+ARG DBNAME
+ARG OUTFILE=somfile
+
+FROM python as base
+
+RUN pip install mysql-connector-python pandas
+# modify to add from git
+ADD nginx_create_sqlout.py .
+
+#RUN python nginx_create_sqlout.py --rootpass ${ROOTPASS} --database ${DBNAME} --out ${OUTFILE}
+# found here https://www.freecodecamp.org/news/docker-cache-tutorial/ 
+
+ARG MYSQLUSER=www
+ARG DBHOST=ssss
+ARG OUTFILE=none
+ENV MYSQLUSER=${MYSQLUSER}
+ENV DBHOST=${DBHOST}
+#ENV OUTFILE=$OUTFILE
+
+#RUN python nginx_create_sqlout.py --out ${OUTFILE}
+ 
+RUN python nginx_create_sqlout.py --mysqluser $MYSQLUSER --out $OUTFILE --dbhost ${DBHOST}
+#RUN python nginx_create_sqlout.py --mysqluser report --out ${OUTFILE}.html --dbhost 172.19.244.87
+
+FROM nginx
+USER root
+EXPOSE 9980
+#have to declare overwise causes => ERROR [stage-1 2/2] COPY  --from=base  /usr/share/nginx/html/index.html
+ARG OUTFILE 
+
+COPY  --from=base $OUTFILE /usr/share/nginx/html/index.html
+
+ 
