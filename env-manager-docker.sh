@@ -1,15 +1,17 @@
 #!/bin/env bash
-# Straightforward approach - just in sake to spare time. Due the same reason there is less validations than it should be 
+
+# Uses "docker compose" to manage stack 
 # env up/down, image rebuild
-# 
-#
+# Known limitations/todo:
+#   - there is less validations than it should be 
+#   - system uses plain credentials - have to implement secrets
+#   - there is no validation of DB is up - it would fail "deploy" if it doesn't
 
 set -e #trigger failue at first error; 
-#git clone 
-# cd gitclone
 
 MODE==${1} # up, down, rebuild
 DBNAME=${2:-"DB"}
+# sort of security precaution. :)
 MYSQL_ROOT_PASSWORD=$(date +%s | sha256sum | base64 | head -c 32 )
 DB_PORT=3306
 MYSQL_IMAGE="panaya/mysql:latest"
