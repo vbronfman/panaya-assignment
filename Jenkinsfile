@@ -60,10 +60,11 @@
         }
 
         stage ('Integration test') {
-           sh './env-manager.sh up'
-           sh 'curl http://localhost:9980/param?query=demo | jq'
-         // curl test
-         sh './env-manager
+            steps {
+                sh './env-manager.sh up'
+                sh 'curl http://localhost:9980/param?query=demo | jq'
+            }
+         
         }
         
         stage ('Clean Up'){
@@ -74,7 +75,8 @@
     }
   post {
     always {
-      sh 'docker compose down --remove-orphans -v'
+      // sh 'docker compose down --remove-orphans -v'
+      sh 'docker compose down -v'
       sh 'docker compose ps'
     }
   }
