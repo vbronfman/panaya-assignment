@@ -17,6 +17,10 @@ services:
           MYSQL_ROOT_PASSWORD: password
           MYSQL_DATABASE: DB  
         container_name: mysqldb       
+        #MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+        # secrets:
+        #   - mysql_root_password
+        #   - mysql_user_password
                 
     webserver:
         build:
@@ -25,12 +29,28 @@ services:
             args:
                 DBNAME: 'DB'
                 MYSQLUSER: "report"
-                OUTFILE: $(date +%s)
+                OUTFILE: somefile
                 #DBHOST: mysqldb
-                DBHOST: 172.19.244.87
+                DBHOST: host.docker.internal
+                #DBHOST: 172.19.244.87
+          
+        depends_on: 
+          - mysqldb        
         ports:
           - "9980:80"        
         expose:
           - '9980'
+        # secrets:
+        #   - mysql_user_password
+  
+# not in use
+# secrets:
+#   mysql_root_password:
+#     #external: true
+#     file: mysql_root_password
+#   mysql_user_password:
+#     #external: true
+#     file: mysql_user_password
+
           
 

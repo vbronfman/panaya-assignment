@@ -29,7 +29,7 @@ mydb =  connector.connect(
   host = args.get("dbhost"), #"172.19.244.87",
   user=args.get("mysqluser"),
   #user="report",
-  password="report",
+  password=args.get("mysqluser"),
   database=args.get("database","DB")
 )
 
