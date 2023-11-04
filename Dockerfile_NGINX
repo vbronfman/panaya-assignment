@@ -20,7 +20,7 @@ ENV OUTFILE=$OUTFILE
 #RUN python nginx_create_sqlout.py --out ${OUTFILE}
  
 #RUN python nginx_create_sqlout.py --mysqluser $MYSQLUSER --out $OUTFILE --dbhost $DBHOST
-RUN python nginx_create_sqlout.py --mysqluser report --out ${OUTFILE}.html --dbhost localhost
+RUN python nginx_create_sqlout.py --mysqluser report --out ${OUTFILE}.html --dbhost pcbang
 
 FROM nginx
 USER root
