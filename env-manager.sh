@@ -26,7 +26,6 @@ DBHOST=$(ip route get 8.8.8.8| grep src| sed 's/.*src \(.* \)/\1/g'|cut -f1 -d '
 
 envUp(){
     docker compose up -d --wait --no-recreate mysqldb 
-    sleep 10
     docker compose build --build-arg OUTFILE=$(date +%s) --build-arg DBHOST=${DBHOST}  webserver
     docker compose up -d --force-recreate webserver
 }    
