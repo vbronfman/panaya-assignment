@@ -3,13 +3,18 @@ import pandas as pd
 import argparse
 
 
-htmlfile = "nginx_static.html"
-
 #https://dev.mysql.com/doc/connector-python/en/connector-python-example-connecting.html
 mydb =  connector.connect(
-  host="localhost",
+  #host="localhost",
+  #host="host.docker.internal",
+  host = args.get("dbhost"), #"172.19.244.87",
+  #host = "172.19.244.87",
+  #user="root",
+  user=args.get("mysqluser"),
+  #user="report",
   password="report",
-  database="DB"
+ #password="YjdkZjhjMjJmMDVkZDBjZTkzOGIyM2Y0",
+  database=args.get("database","DB")
 )
 
 mycursor = mydb.cursor()
@@ -44,6 +49,20 @@ join  As_project        as p
 myresult = mycursor.fetchall()
 
 for x in myresult:
-   print (f"DEBUG {x}")
+  print (f"DEBUG {x}")
 
 
+# Next to remove! html in favor of pandas
+html_table_template = """<table>
+{}
+</table>"""
+row_template = "<tr><td>{}</td><td>{}</td><td>{}</td></tr>"
+
+col_names = "ID", "Name", "Email"
+html_rows = [row_template.format(*col_names)]
+for record in myresult:
+    html_rows.append(row_template.format(*record))
+
+html_table = html_table_template.format('\n  '.join(html_rows))
+
+print(html_table)
