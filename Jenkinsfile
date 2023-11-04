@@ -15,7 +15,7 @@
     }
     
     parameters {
-        string(defaultValue: "master", description: 'Which branch?', name: 'BRANCH_NAME')
+        string(defaultValue: "main", description: 'Which branch?', name: 'BRANCH_NAME')
     }
     
     stages {
@@ -34,11 +34,9 @@
                     def out = sh(returnStdout: true, script: 'flake8 app.py || echo Flak finished with errors')
                      echo "Output: '${out}'"
                 }    
-                          
             }
         }
                 
-        
         stage('Code lint') {
             steps {
                  sh """ python3 -m pip install pylint || echo Failed to install pylint                """  
@@ -62,7 +60,10 @@
         }
 
         stage ('Integration test') {
-        
+           sh './env-manager.sh up'
+           sh 'curl http://localhost:9980/param?query=demo | jq'
+         // curl test
+         sh './env-manager
         }
         
         stage ('Clean Up'){
@@ -71,4 +72,10 @@
            }
         }
     }
+  post {
+    always {
+      sh 'docker compose down --remove-orphans -v'
+      sh 'docker compose ps'
+    }
+  }
 }
