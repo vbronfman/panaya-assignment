@@ -10,12 +10,12 @@ ADD nginx_create_sqlout.py .
 #RUN python nginx_create_sqlout.py --rootpass ${ROOTPASS} --database ${DBNAME} --out ${OUTFILE}
 # found here https://www.freecodecamp.org/news/docker-cache-tutorial/ 
 
-ARG MYSQLUSER=www
-ARG DBHOST=ssss
+ARG MYSQLUSER=report
+ARG DBHOST=DB
 ARG OUTFILE=none
 ENV MYSQLUSER=${MYSQLUSER}
 ENV DBHOST=${DBHOST}
-#ENV OUTFILE=$OUTFILE
+ENV OUTFILE=$OUTFILE
 
 #RUN python nginx_create_sqlout.py --out ${OUTFILE}
  

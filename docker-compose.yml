@@ -15,7 +15,8 @@ services:
           - '3306'  
         environment:
           MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: DB        
+          MYSQL_DATABASE: DB  
+        container_name: mysqldb       
                 
     webserver:
         build:
@@ -23,10 +24,10 @@ services:
             dockerfile: ./Dockerfile_NGINX
             args:
                 DBNAME: 'DB'
-                NGINX_PORT: 9980
                 MYSQLUSER: "report"
-                DBHOST: '172.19.244.87'
-                OUTFILE: somefile.html             
+                OUTFILE: $(date +%s)
+                #DBHOST: mysqldb
+                DBHOST: 172.19.244.87
         ports:
           - "9980:80"        
         expose:
