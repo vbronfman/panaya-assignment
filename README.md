@@ -28,8 +28,11 @@ cd panaya_assignment
 
 
 __NOTE__
-_I've started with pure docker solution hence there is below script.
+_I've started with pure docker solution hence there is below script:
+
 ./env-manager-docker.sh starts pure docker environment: builds local images and run containers.
+
 My there recent experience with docker compose is three years ago so it took me a little while. For same reason I've ran into 
+
 peculiar troubles with docker compose while tried to unv env variables for passwords_
 
