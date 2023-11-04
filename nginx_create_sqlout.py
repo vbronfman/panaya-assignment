@@ -3,19 +3,14 @@ import pandas as pd
 import argparse
 
 
+htmlfile = "nginx_static.html"
+
 #https://dev.mysql.com/doc/connector-python/en/connector-python-example-connecting.html
 mydb =  connector.connect(
-  #host="localhost",
-  #host="host.docker.internal",
-  host = args.get("dbhost"), #"172.19.244.87",
-  #host = "172.19.244.87",
-  #user="root",
-  user=args.get("mysqluser"),
-  #user="report",
+  host="localhost",
+  user="report",
   password="report",
- #password="YjdkZjhjMjJmMDVkZDBjZTkzOGIyM2Y0",
-  database=args.get("database","DB")
-)
+  database="DB")
 
 mycursor = mydb.cursor()
 
@@ -51,18 +46,13 @@ myresult = mycursor.fetchall()
 for x in myresult:
   print (f"DEBUG {x}")
 
-
-# Next to remove! html in favor of pandas
-html_table_template = """<table>
-{}
-</table>"""
-row_template = "<tr><td>{}</td><td>{}</td><td>{}</td></tr>"
-
-col_names = "ID", "Name", "Email"
-html_rows = [row_template.format(*col_names)]
-for record in myresult:
-    html_rows.append(row_template.format(*record))
-
-html_table = html_table_template.format('\n  '.join(html_rows))
-
-print(html_table)
+# https://stackoverflow.com/questions/63487038/formatting-html-pandas-tables-in-python
+df = pd.DataFrame(myresult,columns='Company_ID Company_Name Account_ID Account_Name Project_ID Project_Name Project_Status'.split())
+ 
+html = """
+    {table1}
+    
+    """.format( table1=df.to_html(index=False),
+        )
+with open(htmlfile, 'w') as _file:
+    _file.write(html)
