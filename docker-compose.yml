@@ -1,0 +1,33 @@
+version: '3'
+services:
+    mysqldb:
+        build:
+            context: .
+            dockerfile: ./Dockerfile_MySQL
+            args:
+                MYSQL_DATABASE: 'DB'
+                MYSQL_ROOT_PASSWORD: password
+                DB_PORT: 3306
+                MYSQL_READ_ONLY_USER: "report"
+        ports:
+          - "3306:3306"
+        expose:
+          - '3306'  
+        environment:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: DB        
+                
+    # webserver:
+    #     build:
+    #         context: .
+    #         dockerfile: ./Dockerfile_NGINX
+    #         args:
+    #             DBNAME: 'DB'
+    #             NGINX_PORT: 9980
+    #             MYSQL_READ_ONLY_USER: "report"
+    #             DBHOST: '172.19.244.87'
+    #     ports:
+    #       - "9980:80"        
+    #     expose:
+    #       - '9980'
+

@@ -1,0 +1,55 @@
+# syntax = docker/dockerfile:1.4.0
+# You need to use Docker Buildkit by setting DOCKER_BUILDKIT=1 in your environment, set the syntax parser directive to use dockerfile/dockerfile:1.4.0
+# MySQL 
+# sudo docker run -d --name db-mysql -e MYSQL_ROOT_PASSWORD=mypassword -e MYSQL_DATABASE=DB -v $PWD/schema.sql:/docker-entrypoint-initdb.d/schema.sql mysql
+# docker run --name test-mysql-3 -v /my/own/datadir:/docker-entrypoint-initdb.d -p 3306 -e MYSQL_ROOT_PASSWORD=my-secret-pw -e MYSQL_DATABASE=mysql -d mysql:latest
+# ports:
+#      - "3306:3306"
+# CREATE TABLE geonames (FEATURE_ID INT(10), FEATURE_NAME VARCHAR(120), FEATURE_CLASS VARCHAR(50), STATE_ALPHA VARCHAR(2), STATE_NUMERIC VARCHAR(2), COUNTY_NAME VARCHAR(100), COUNTY_NUMERIC VARCHAR(3), PRIMARY_LAT_DMS VARCHAR(7), PRIM_LONG_DMS VARCHAR(8), PRIM_LAT_DEC DECIMAL(10,7), PRIM_LONG_DEC DECIMAL(11,7), SOURCE_LAT_DMS VARCHAR(7), SOURCE_LONG_DMS VARCHAR(8), SOURCE_LAT_DEC DECIMAL(10,7), SOURCE_LONG_DEC DECIMAL(11,7), ELEV_IN_M INT(5), ELEV_IN_FT INT(6), MAP_NAME VARCHAR(100), DATE_CREATED DATE, DATE_EDITED DATE);
+# LOAD DATA LOCAL INFILE $PATH-TO-DATA' INTO TABLE geonames CHARACTER SET utf8 FIELDS TERMINATED BY '|' ;
+
+FROM mysql:5.7 as build
+#WORKDIR /docker-entrypoint-initdb.d/
+
+ENV MYSQL_DATABASE="DB" \
+    MYSQL_ROOT_PASSWORD="mypassword"
+
+# requires DOCKER_BUILDKIT=1 
+COPY <<EOF /docker-entrypoint-initdb.d/create_tables.sql
+
+DROP TABLE IF EXISTS `As_company`;
+CREATE TABLE `As_company` (
+  `Id` int NOT NULL,
+  `Name` varchar(100) NOT NULL,
+   PRIMARY KEY (`Id`)
+-- ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
+INSERT INTO `As_company` VALUES (123,'Panaya'),(124,'Noname');
+
+DROP TABLE IF EXISTS `As_account`;
+CREATE TABLE `As_account` (
+  `Id` int NOT NULL,
+  `Name` varchar(100) NOT NULL,
+  `Company_id` varchar(100) NOT NULL,
+--    FOREIGN KEY (Company_id)
+--       REFERENCES As_company(Id)
+  PRIMARY KEY (`Id`)
+) DEFAULT CHARSET=utf8;
+INSERT INTO `As_account` VALUES (111,'Production system',123),(222,'Dev system',124);
+
+DROP TABLE IF EXISTS `As_project`;
+CREATE TABLE `As_project` (
+  `Id` int NOT NULL,
+  `Name` varchar(100) NOT NULL,
+  `Account_id` int NOT NULL,
+  `Status` int NOT NULL, 
+  PRIMARY KEY (`Id`)
+) DEFAULT CHARSET=utf8;
+INSERT INTO `As_project` VALUES (1111,'Upgrade',111,1),(2222,'Testing',111,1),(3333,'Cleansing',111,2),(4444,'Restore',222,0);
+
+-- created inline for simplicity sake
+CREATE USER 'report'@'%' IDENTIFIED BY 'report';
+GRANT SELECT ON DB.* TO 'report'@'%';
+FLUSH PRIVILEGES;
+
+EOF
