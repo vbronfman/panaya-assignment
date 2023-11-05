@@ -34,7 +34,7 @@ mydb =  connector.connect(
 )
 
 mycursor = mydb.cursor()
-
+# https://dataschool.com/how-to-teach-people-sql/sql-join-types-explained-visually/ 
 mycursor.execute(
    '''
 select 
