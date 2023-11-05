@@ -69,3 +69,34 @@ _01:50:23  #7 0.763 _mysql_connector.MySQLInterfaceError: Access denied for user
 
 As workaround altered report user in DB to set new password "report". By rerun of pipeline issue doesn't recure.
 
+
+## TODO
+In a way to customise the solution the way to add the following to the above system:
+1. GIT
+  Manage repository for source code of the solution. 
+  Git should be single source of truth: source from git should effectively overright any drift done by manual changes.
+
+2. Jenkins
+   - Current Jenkins pipeline needs to be added proper tests . 
+   - There is a way to employ Multibranch pipeline to automate build triggering upon merge.
+
+3. Local Docker repository (if I get it properly) 
+  For the moment the solution makes no use of Docker repository whatsoever. 
+  
+  Have to amend with management of images:
+  - tagging - like  '${git rev-parse HEAD} for instance
+  - validation and security check
+  - signing
+  - push to repository
+  
+  Suggested  Docker repository either managed like AWS ECR or Artefactory, Nexus.
+
+4. CI \ CD
+  CI is intended to build, validate and test images of the solution. Integration test involves deployment of containers. Once tests yeilded success - images are uploaded to artifactory repository. 
+
+  CI job is triggered by merge into main trank, PR request or on schedule. 
+
+
+  CD is triggered upon upload of images into archefactory repository. 
+   
+  For the solution is container based it can be deployed into managed container runtime, like AWS ECS or into k8s cluster.
