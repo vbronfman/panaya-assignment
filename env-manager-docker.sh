@@ -54,9 +54,8 @@ runMySQL(){
 buildWebserver(){
 #kill NGINX container; build anew NGINX image; start NGINX container
   [[ -n $(docker ps -f "name=${NGINX_CONTAINER}" -q) ]] &&  docker kill ${NGINX_CONTAINER}
- 
-  docker build -t ${NGINX_IMAGE} -f ./Dockerfile_NGINX --build-arg="MYSQLUSER=${MYSQL_READ_ONLY_USER}" --build-arg=OUTFILE=$(date +%s) --build-arg DBNAME=${DBNAME} \
-    --build-arg="DBHOST=${DBHOST}" . 
+ echo buildWebserver
+  docker build -t ${NGINX_IMAGE} -f ./Dockerfile_NGINX --build-arg="MYSQLUSER=${MYSQL_READ_ONLY_USER}" --build-arg=OUTFILE=$(date +%s) --build-arg DBNAME=${DBNAME}  --build-arg="DBHOST=${DBHOST:=host.docker.internal}" . 
   docker run --rm  -d --name ${NGINX_CONTAINER} -p ${NGINX_PORT}:80  ${NGINX_IMAGE}
 }
 
