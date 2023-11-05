@@ -23,7 +23,7 @@ cd panaya_assignment
 
 [ down|DOWN ] - stop and remove the stack 
 
-[ down|DOWN ] - deploy - rebuilds and restarts webserver  
+[ deploy ] - deploy - rebuilds and restarts webserver  
 
 
 ### Validation
