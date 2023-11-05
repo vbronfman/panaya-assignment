@@ -19,10 +19,10 @@
     }
     
     stages {
-         stage('checkout') {
+         stage('Checkout') {
                 steps {
             catchError(message: 'Error to clone code occured') {
-                git branch: 'main',
+                git branch: "${BRANCH_NAME}",
                 credentialsId: 'githubtoken',
                 url: 'https://github.com/vbronfman/panaya-assignment.git'
               /*
@@ -41,17 +41,19 @@
         
         stage('Code format') {
             steps {
-                  sh """ python3 -m pip install flake8 || echo Failed to install flake8 ;               """  
+                catchError(message: 'Error Code format checks occured') {
+                  sh """ python -m pip install flake8 || echo Failed to install flake8 ;               """  
                  script {
                     def out = sh(returnStdout: true, script: 'flake8 app.py || echo Flak finished with errors')
                      echo "Output: '${out}'"
                 }    
+               }
             }
         }
                 
         stage('Code lint') {
             steps {
-                 sh """ python3 -m pip install pylint || echo Failed to install pylint                """  
+                 sh """ python -m pip install pylint || echo Failed to install pylint                """  
                  script {
                     def status = sh(returnStatus: true, script: 'pylint nginx_create_sqlout.py')
                     if (status != 0) {
@@ -64,32 +66,44 @@
              }
         }
         
-        stage('Test') {
+        stage('Pytest') {
+            agent { docker { image 'python:3.12.0-alpine3.18' } }
             steps {
-                sh 'python3 '
-                sh 'python3 -m pytest'
+                sh 'python --version '
+                sh 'ls'
+             //   sh 'python -m pytest'
             }
         }
 
         stage ('Integration test') {
             steps {
-                sh './env-manager.sh up'
-                sh 'curl http://localhost:9980/param?query=demo | jq'
+                sh 'chmod +x ./env-manager-docker.sh && ./env-manager-docker.sh up'
+                sh 'curl -s -I http://localhost:9980/'
             }
          
         }
         
         stage ('Clean Up'){
            steps{
-                sh 'echo clean up'
+                sh './env-manager-docker.sh down'
+                echo ' NOTE! down doesn't stop container mysqldb '.
            }
         }
     }
   post {
     always {
      // sh 'docker compose down --remove-orphans -v'
-      sh 'docker compose down -v'
-      sh 'docker compose ps'
+      
+      sh 'docker ps'
+              // Clean after build
+       cleanWs(cleanWhenNotBuilt: false,
+                    deleteDirs: true,
+                    disableDeferredWipeout: true,
+                    notFailBuild: true,
+                    patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
+                               [pattern: '.propsfile', type: 'EXCLUDE']])
+       
+        }
     }
-  }
+  
 }

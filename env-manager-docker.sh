@@ -15,7 +15,7 @@ DBNAME=${2:-"DB"}
 MYSQL_ROOT_PASSWORD=$(date +%s | sha256sum | base64 | head -c 32 )
 DB_PORT=3306
 MYSQL_IMAGE="panaya/mysql:latest"
-MYSQL_CONTAINER="db-mysql"
+MYSQL_CONTAINER="mysqldb"
 NGINX_CONTAINER="mynginx"
 NGINX_IMAGE="panaya/nginxsrv"
 NGINX_PORT=9980
@@ -77,6 +77,9 @@ case "${1,,}" in  # double comma to lowercase
 "deploy")  echo  "Build anew image of webserver"
     buildWebserver
     ;;
-*) echo "My don't know what to do"
+*) echo "My don't know what to do
+        up|UP - start mysqldb and webserver stack;
+        down|DOWN - stop and remove the stack 
+        deploy - rebuild and restart webserver. "
    ;;
 esac
