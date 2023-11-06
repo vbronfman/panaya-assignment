@@ -7,9 +7,11 @@ Images are stored at Docker Hub
 Requires IAM user with permissions to create roles.
 
 ## Usage:
-terraform init
-terraform plan
-terraform apply --auto-approve -var aws-access-key=xxxxx -var aws-secret-key=xxxxx -var name=<somename>
+_terraform init_
+
+_terraform plan_
+
+_terraform apply --auto-approve -var aws-access-key=xxxxx -var aws-secret-key=xxxxx -var name=<somename>_
 
 
 ### References
