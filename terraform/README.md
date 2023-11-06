@@ -11,7 +11,7 @@ _terraform init_
 
 _terraform plan_
 
-_terraform apply --auto-approve -var aws-access-key=xxxxx -var aws-secret-key=xxxxx -var name=<somename>_
+_terraform apply --auto-approve -var aws-access-key=xxxxx -var aws-secret-key=xxxxx -var name= somename_
 
 
 ### References
